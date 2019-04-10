@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="lib\glad\src\glad.c">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="picopng.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="gltools.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="simulation.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="tools">
+      <UniqueIdentifier>{3b5ff1a5-35d1-4742-9c29-32b5eff93338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files">
+      <UniqueIdentifier>{d9f152e8-166e-4189-8da1-dc3a18f3e48e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files">
+      <UniqueIdentifier>{85b3f07e-e6de-458e-93a4-4130c2a0b471}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="precomp.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="constraint.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="cloth.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="openglhelper.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
