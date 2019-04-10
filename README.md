@@ -1,5 +1,6 @@
 # Cloth-Simulator
 Cloth Simulator built for the Game Physics course of the Game and Media Technology Master program.
+Created by Mark Berentsen (5511941) and Mark de Jong (5547717).
 
 ![preview](preview.png)
 
