@@ -6,7 +6,7 @@ Created by Mark Berentsen (5511941) and Mark de Jong (5547717).
 
 ## Features
 1. Cloth simulation by means of a mass spring system, including dampening.
-2. Wind simulation by calculating wind directions per triangle.
+2. Wind simulation by calculating wind forces per triangle.
 3. Interaction with rigid spheres.
 4. Tearable cloth based on maximum spring stretching.
 
