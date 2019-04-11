@@ -15,7 +15,7 @@ Created by Mark Berentsen (5511941) and Mark de Jong (5547717).
 - Rotate around cloth with the mouse.
 - Play/pause simulation with the spacebar.
 - Reset the cloth with the R key.
-- Make the cloth tearable/untearable with the T key.
+- Make the cloth tearable/untearable with the T key, show tears or not with the S key.
 - Enable/disable wind force and ball position with the W and B keys respectively.
 - Use 1, 2, 3 and 4 to individually make the corners of the cloth static or dynamic.
 
