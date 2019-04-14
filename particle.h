@@ -53,7 +53,8 @@ public:
 	void MakeMovable() { fixed = false; }
 	void MakeUnmovable() { fixed = true; }
 
-	// flag the particle as being part of a broken constraint
+	// flag the particle as being part of a broken constraint or not
+	void SetToFixed() { broken = false; }
 	void SetToBroken() { broken = true; }
 	bool IsBroken() { return broken; }
 };

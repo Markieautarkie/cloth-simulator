@@ -7,6 +7,9 @@ public:
     Vec3 position;
     float radius;
 
+	// color of the sphere
+	Vec3 color;
+
 	// setup for making the sphere out of quads
     int sectorCount;
     int stackCount;
@@ -19,7 +22,7 @@ public:
     int interleavedStride;
 
 	// constructor
-    Sphere(Vec3 position, float radius = 1.0f, int sectorCount = 36, int stackCount = 18) : interleavedStride(24), position(position)
+	Sphere(Vec3 position, Vec3 color, float radius = 1.0f, int sectorCount = 36, int stackCount = 18) : interleavedStride(24), position(position), color(color)
     {
         Set(radius, sectorCount, stackCount);
     }
@@ -48,8 +51,6 @@ public:
 	// build the vertices of the sphere
     void BuildVertices()
     {
-        const float PI = 3.1415926f;
-
         // clear previous data
         ClearArrays();
 
@@ -153,7 +154,7 @@ public:
 	// draws the sphere
     void Draw() const
     {
-        glColor3f(1.f, 0.f, 0.f);
+        glColor3f(color.f[0], color.f[1], color.f[2]);
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         glVertexPointer(3, GL_FLOAT, interleavedStride, &interleavedVertices[0]);

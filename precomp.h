@@ -5,13 +5,15 @@
 // do not include headers in header files (ever)
 
 // constants
-#define WINDOWWIDTH 1280              // the width of the application window
-#define WINDOWHEIGHT 720              // the height of the application window
+#define PI 3.1415926535897932384626433832795
+
+#define MOUSESENSITIVITY 0.75f        // sensitivity of the mouse
+#define SCRWIDTH 1280                 // the width of the application window
+#define SCRHEIGHT 720                 // the height of the application window
 
 #define DAMPING 0.01                  // the amount of damping on mass spring systems
-#define TIMESTEP 0.5                  // besic timestep
+#define TIMESTEP 0.5                  // basic timestep
 #define TIMESTEP2 TIMESTEP * TIMESTEP // integrated timestep
-#define CONSTITER 10                  // the amount of iterations of constraint satisfaction (more is rigid, less is soft)
 
 // enum for cloth patterns
 enum class Pattern { Vertical, Horizontal, Checkerboard, Random};
@@ -25,6 +27,7 @@ enum class Pattern { Vertical, Horizontal, Checkerboard, Random};
 #include <ctime>
 #include <vector>
 #include "vec3.h"
+#include "camera.h"
 #include "openglhelper.h"
 
 // headers

@@ -47,5 +47,8 @@
     <ClInclude Include="openglhelper.h">
       <Filter>header files</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

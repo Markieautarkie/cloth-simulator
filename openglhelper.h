@@ -19,7 +19,7 @@ private:
 	// sets the window perspective for OpenGL
 	void SetOpenGLPerspective(GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 	{
-		const GLdouble pi = 3.1415926535897932384626433832795;
+		const GLdouble pi = PI;
 		GLdouble fW, fH;
 
 		fH = tan(fovY / 360 * pi) * zNear;
@@ -66,6 +66,6 @@ public:
 		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
 		// reshapes the window
-		ReshapeWindow(WINDOWWIDTH, WINDOWHEIGHT);
+		ReshapeWindow(SCRWIDTH, SCRHEIGHT);
 	}
 };

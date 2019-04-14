@@ -2,15 +2,23 @@
 class Cloth
 {
 private:
+	Vec3 worldPos;                       // the position of the cloth in world
+	float width, height;                 // the width and height of the cloth
 	int particlesWidth, particlesHeight; // number of particles in the cloth
-	float stretch; // the factor with which the particles can stretch the constraint before it breaks
 
-	Pattern pattern; // the cloth pattern
+	bool showTears;     			     // visualize the tears or not
+	bool tearable;                       // is the cloth tearable or not
+	float stretch;                       // the factor with which the particles can stretch the constraint before it breaks
+
+	Pattern pattern;     // the cloth pattern
 	Vec3 color1, color2; // the color(s) of the cloth
 
 	// the particles in the cloth and the constraints between these particles
 	std::vector<Particle> particles; 
-	std::vector<Constraint> constraints;
+	std::vector<Constraint> constraints, backupConstraints;
+
+	// the amount of constraint solving iterations of the cloth (less is softer, more is rigid)
+	int constIter;
 
 	// method to get a certain particle and to set constraints between particles
 	Particle* GetParticle(int x, int y) { return &particles[x + y * particlesWidth]; }
@@ -91,14 +99,21 @@ private:
 	}
 
 public:
-	// constructor - set stretchfactor to positive for tearing
-	Cloth(Vec3 posWorld, float width, float height, int particlesWidth, int particlesHeight, Pattern pattern = Pattern::Vertical, Vec3 color1 = Vec3(0.6f, 0.2f, 0.2f), Vec3 color2 = Vec3(1.0f, 1.0f, 1.0f), float stretchFactor = -1.0f)
-		: particlesWidth(particlesWidth), particlesHeight(particlesHeight), pattern(pattern), color1(color1), color2(color2)
+	// constructor
+	Cloth(Vec3 worldPos, float width, float height, int particlesWidth, int particlesHeight, 
+		Pattern pattern = Pattern::Vertical, Vec3 color1 = Vec3(0.6f, 0.2f, 0.2f), Vec3 color2 = Vec3(1.0f, 1.0f, 1.0f), 
+		int constIter = 15, float stretchFactor = 1.0f)
+		: worldPos(worldPos), width(width), height(height), particlesWidth(particlesWidth), particlesHeight(particlesHeight), 
+		pattern(pattern), color1(color1), color2(color2), constIter(constIter)
 	{
+		// set the initial tearing state of a cloth to false
+		tearable = false;
+
 		// the stretch depends on the stretchFactor and the amount of particles in the cloth
+		float particleAmount = ((float)particlesWidth * (float)particlesHeight) / 1000;
 		float particleDensity = (particlesWidth > particlesHeight) ? 
 			(float)particlesWidth / (float)particlesHeight : (float)particlesHeight / (float)particlesWidth;
-		stretch = stretchFactor * particleDensity;
+		stretch = stretchFactor * particleDensity * particleAmount;
 
 		// resize the vector to house all the particles
 		particles.resize(particlesWidth*particlesHeight);
@@ -108,10 +123,10 @@ public:
 			for (int y = 0; y < particlesHeight; y++)
 			{
 				Vec3 pos = Vec3(width * (x / (float)particlesWidth), -height * (y / (float)particlesHeight), 0);
-				particles[x + y * particlesWidth] = Particle(pos + posWorld);
+				particles[x + y * particlesWidth] = Particle(pos + worldPos);
 			}
 		
-		// for each particle, connect it to its neighbors (also diagonally)
+		// for each particle, connect it to its neighbors
 		for (int x = 0; x < particlesWidth; x++)
 			for (int y = 0; y < particlesHeight; y++)
 			{
@@ -175,9 +190,9 @@ public:
 				Particle *p4 = GetParticle(x + 1, y + 1);
 
 				// make sure the particles aren't part of a broken constraint before drawing the triangles
-				if (!p3->IsBroken() || !p1->IsBroken() || !p2->IsBroken())
+				if (showTears || (!p3->IsBroken() || !p1->IsBroken() || !p2->IsBroken()))
 					DrawTriangle(p3, p1, p2, color);
-				if (!p4->IsBroken() || !p3->IsBroken() || !p2->IsBroken())
+				if (showTears || (!p4->IsBroken() || !p3->IsBroken() || !p2->IsBroken()))
 					DrawTriangle(p4, p3, p2, color);
 			}
 		glEnd();
@@ -189,10 +204,14 @@ public:
 		// iterate over the constraints several times and satisfy them
 		// if the constraint stretched too far, break it
 		std::vector<Constraint>::iterator constraint;
-		for (int i = 0; i < CONSTITER; i++)
+		for (int i = 0; i < constIter; i++)
 			for (constraint = constraints.begin(); constraint != constraints.end(); constraint++)
-				if ((*constraint).SatisfyConstraint(stretch))
+				if ((*constraint).SatisfyConstraint(tearable, stretch))
+				{
+					// save a copy of the broken constraint
+					backupConstraints.push_back(*constraint);
 					constraints.erase(constraint--);
+				}
 			
 		// update the particles
 		std::vector<Particle>::iterator particle;
@@ -221,9 +240,9 @@ public:
 				Particle *p4 = GetParticle(x + 1, y + 1);
 
 				// make sure the particles aren't part of a broken constraint before applying the impulses
-				if (!p3->IsBroken() || !p1->IsBroken() || !p2->IsBroken())
+				if (showTears || (!p3->IsBroken() || !p1->IsBroken() || !p2->IsBroken()))
 					AddForcesToTriangle(p3, p1, p2, direction);
-				if (!p4->IsBroken() || !p3->IsBroken() || !p2->IsBroken())
+				if (showTears || (!p4->IsBroken() || !p3->IsBroken() || !p2->IsBroken()))
 					AddForcesToTriangle(p4, p3, p2, direction);
 			}
 	}
@@ -250,20 +269,46 @@ public:
 			case 4:
 				p = GetParticle(i, particlesHeight - 1);
 				break;
+			default:
+				p = NULL;
+				break;
 			}
 
 			// make the points movable or unmovable depending on the state
-			if (p->GetMoveState() == false)
-			{
-				// calculate a nudge vector to make the cloth hang more naturally
-				Vec3 nudge = (corner % 2 == 1) ? Vec3(0.5, 0, 0) : Vec3(-0.5, 0, 0);
-				p->OffsetPos(nudge);
+			if (p->GetMoveState() == false && !p->IsBroken())
 				p->MakeUnmovable();
-			}
 			else
 				p->MakeMovable();
 		}
 	}
+
+	// reset the position of the cloth and cloth state
+	void ResetCloth()
+	{
+		// reset all particles
+		for (int x = 0; x < particlesWidth; x++)
+			for (int y = 0; y < particlesHeight; y++)
+			{
+				// reset the positions
+				Vec3 pos = Vec3(width * (x / (float)particlesWidth), -height * (y / (float)particlesHeight), 0);
+				particles[x + y * particlesWidth] = Particle(pos + worldPos);
+
+				// reset the state of the particles
+				GetParticle(x, y)->SetToFixed();
+			}
+
+		// repair the constraints between all particles
+		constraints.insert(constraints.end(), backupConstraints.begin(), backupConstraints.end());
+
+		// set the top 2 corners so that the cloth doesn't immediately fall again
+		SwitchCorner(1); SwitchCorner(2);
+	}
+
+	// show the tears in the cloth or not
+	void SwitchShowTears() { showTears = !showTears; }
+
+	// make the cloth tearable or not
+	void SwitchTearable() { tearable = !tearable; }
 
 	// resolves collision with a sphere
 	void SphereCollision(const Vec3 center, const float radius)

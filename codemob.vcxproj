@@ -36,6 +36,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="cloth.h" />
     <ClInclude Include="constraint.h" />
     <ClInclude Include="openglhelper.h" />

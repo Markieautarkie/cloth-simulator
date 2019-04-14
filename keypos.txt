@@ -1,6 +1,0 @@
-Function keys: y = 0 .. 91, x = 0, 115, 231, 346, 462, 578, 692, 807, 923, 1041, 1156, 1280
-1..9,0,BS: y = 92 .. 225, x: see function keys
-QWERTY: y = 226 .. 357, x = 27, 146, 262, 377, 493, 607, 722, 839, 956, 1070, 1187, 1280
-ASDF: y = 358 .. 468, x = 56, 179, 292, 410, 523, 639, 754, 871, 986, 1103, 1280
-SHIFT, ZXC: y = 469 .. 590, x: see function keys
-Last row: y = 591 .. 720, x: see function keys (mind space)

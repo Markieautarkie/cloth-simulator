@@ -25,6 +25,14 @@ public:
 		f[2] += v.f[2];
 	}
 
+	// concatenated subtraction
+	void operator-= (const Vec3 &v)
+	{
+		f[0] -= v.f[0];
+		f[1] -= v.f[1];
+		f[2] -= v.f[2];
+	}
+
 	// returns the length of the vector
 	float Length() { return sqrt(f[0] * f[0] + f[1] * f[1] + f[2] * f[2]); }
 

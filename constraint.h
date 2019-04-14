@@ -16,7 +16,7 @@ public:
 
 	// satisfy the constraint between two particles
 	// if the constraint stretches too much, it should break
-	bool SatisfyConstraint(float stretchFactor)
+	bool SatisfyConstraint(bool tearable, float stretchFactor)
 	{
 		// get the spring and the current length of the spring
 		Vec3 spring = p2->GetPos() - p1->GetPos();
@@ -24,13 +24,12 @@ public:
 
 		// check if the constraint should break
 		// if so, flag the particles as part of a broken constraint
-		if (stretchFactor > 0 && currDist > restDist * stretchFactor)
+		if (tearable && currDist > restDist * stretchFactor)
 		{
 			// randomly break one of the particles
-			// remove fixed state if particle is fixed
 			bool randTear = rand() % 2;		
-			if (randTear) { p1->SetToBroken(); p1->MakeMovable(); }
-			else { p2->SetToBroken(); p2->MakeMovable(); }
+			if (randTear) { p1->SetToBroken(); }
+			else { p2->SetToBroken(); }
 
 			return true;
 		}
