@@ -46,8 +46,10 @@ void Draw(void)
         cloth.Update();
 
         // resolve collision with the balls
-        cloth.SphereCollision(Vec3(sphere.position.f[0], sphere.position.f[2], -sphere.position.f[1]), ballRadius);
-		cloth.SphereCollision(Vec3(floorSphere.position.f[0], floorSphere.position.f[2], -floorSphere.position.f[1]), 200.1f);
+		Vec3 spherePos = sphere.GetPosition();
+        cloth.SphereCollision(Vec3(spherePos.f[0], spherePos.f[2], -spherePos.f[1]), ballRadius);
+		Vec3 floorSpherePos = floorSphere.GetPosition();
+		cloth.SphereCollision(Vec3(floorSpherePos.f[0], floorSpherePos.f[2], -floorSpherePos.f[1]), 200.1f);
     }
 
 	// drawing
@@ -70,7 +72,6 @@ void Draw(void)
     glTranslatef(0, 0, distance);
     // then rotate the camera
 	glRotatef(camera.yaw, 0, 1, 0);
-	//glRotatef(camera.pitch, 1, 0, 0);
     // then translate to the center of the cloth
     glTranslatef(-7, 5, 0);
 	 
@@ -88,7 +89,7 @@ void Draw(void)
 // handles the user input
 void HandleInput(GLFWwindow* window)
 {
-	/* keys for making corners static or dynamic, clockwise from top left */
+	// keys for making corners static or dynamic, clockwise from top left
 	int state_1 = glfwGetKey(window, GLFW_KEY_1);
 	if (state_1 == GLFW_RELEASE && oldState_1 == GLFW_PRESS)
 		cloth.SwitchCorner(1);
@@ -109,7 +110,6 @@ void HandleInput(GLFWwindow* window)
 		cloth.SwitchCorner(4);
 	oldState_4 = state_4;
 
-	/* translational and rotational movements */
 	// get the current mouse position and calculate the delta to find mouse change
 	glfwGetCursorPos(window, &xMouse, &yMouse);
 	double deltaXMouse = xMouse - xPrevMouse;
@@ -123,45 +123,53 @@ void HandleInput(GLFWwindow* window)
 	camera.pitch = (camera.pitch > 89.0f) ? 89.0f : (camera.pitch < -89.0f) ? -89.0f : camera.pitch;
 	camera.UpdateCamera();
 
+	// zoom in
     int state_equal = glfwGetKey(window, GLFW_KEY_EQUAL);
     if (state_equal == GLFW_PRESS)
         distance+=0.25f;
 
+	// zoom out
     int state_minus = glfwGetKey(window, GLFW_KEY_MINUS);
     if (state_minus == GLFW_PRESS)
         distance-=0.25f;
 
-	/* application controls */
+	// resets the cloth
 	int state_r = glfwGetKey(window, GLFW_KEY_R);
 	if (state_r == GLFW_RELEASE && oldState_r == GLFW_PRESS)
 		cloth.ResetCloth();
 	oldState_r = state_r;
 
+	// makes the cloth tearable or not
 	int state_t = glfwGetKey(window, GLFW_KEY_T);
 	if (state_t == GLFW_RELEASE && oldState_t == GLFW_PRESS)
 		cloth.SwitchTearable();
 	oldState_t = state_t;
 
+	// show the cloth tears or not
 	int state_s = glfwGetKey(window, GLFW_KEY_S);
 	if (state_s == GLFW_RELEASE && oldState_s == GLFW_PRESS)
 		cloth.SwitchShowTears();
 	oldState_s = state_s;
 
+	// add wind forces or not
 	int state_w = glfwGetKey(window, GLFW_KEY_W);
 	if (state_w == GLFW_RELEASE && oldState_w == GLFW_PRESS)
 		updateWindForce = !updateWindForce;
 	oldState_w = state_w;
 
+	// update ball position or not
 	int state_b = glfwGetKey(window, GLFW_KEY_B);
 	if (state_b == GLFW_RELEASE && oldState_b == GLFW_PRESS)
 		updateBallPos = !updateBallPos;
 	oldState_b = state_b;
 
+	// pause or play the simulation
 	int state_space = glfwGetKey(window, GLFW_KEY_SPACE);
     if (state_space == GLFW_RELEASE && oldState_space == GLFW_PRESS)
         update = !update;
     oldState_space = state_space;
 
+	// quit the simulation
 	int state_escape = glfwGetKey(window, GLFW_KEY_ESCAPE);
 	if (state_escape == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);

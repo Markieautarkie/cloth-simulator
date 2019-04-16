@@ -13,6 +13,12 @@
     <ClCompile Include="simulation.cpp">
       <Filter>source files</Filter>
     </ClCompile>
+    <ClCompile Include="cloth.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="tools">

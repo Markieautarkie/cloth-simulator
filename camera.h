@@ -49,11 +49,13 @@ private:
 		// pre calculate variables
 		Vec3 f;
 		float radYaw = ToRadians(yaw), radPitch = ToRadians(pitch);
+
 		// calculate the new front vector based on the yaw and pitch
 		f.f[0] = cos(radYaw) * cos(radPitch);
 		f.f[1] = sin(radPitch);
 		f.f[2] = sin(radYaw) * cos(radPitch);
 		front = f.Normalized();
+
 		// calculate the other vectors by taking the perpendiculars
 		right = (worldUp.Cross(front)).Normalized();
 		up = (front.Cross(right)).Normalized();
