@@ -1,11 +1,10 @@
 <div id="header" align="center">
   <h1>Cloth Simulator</h1>
-  <p><img src="preview.png" width="80%"/></p>
+  <p><img src="https://user-images.githubusercontent.com/11558887/160651739-c9b34d29-505f-4f6a-8b96-0ca72ed87cd6.png" width="80%"/></p>
   <p>Cloth Simulator built for the Game Physics course of the GMTE Master program at Utrecht University. </p>
   <p><strong>Made with &#10084; by <a href="https://github.com/Markieautarkie">Markieautarkie</a> and <a href="https://github.com/PhantomDot1">PhantomDot1</a></strong></p>
   <a href="https://github.com/Markieautarkie/Cloth-Simulator/releases"><img src="https://img.shields.io/badge/release-1.0.0-success"/></a>
 </div>
-
 
 ## Features
 - [x] Cloth simulation by means of a mass spring system, including dampening
